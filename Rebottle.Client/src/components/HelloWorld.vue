@@ -1,18 +1,56 @@
 <script lang="ts" setup>
+import {ref} from "vue";
+import axios from "axios";
 defineProps<{
   msg: string
+
 }>()
+const   rules =  [
+  (value :any) => !value || value.type == 'text/jpeg' || value.type == 'text/png' || 'Only PNG/JPG files allowed'
+]
+
+function apicall(){
+  if(file.value != null){
+    let formData = new FormData();
+    formData.append("file", file.value);
+    axios.post("localhost:5000/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }).then((resp: any) => {
+      console.log(resp);
+
+    });
+  }
+
+}
+
+let file = ref(null)
 </script>
 
 <template>
   <div class="greetings">
     <div class="headings">
-      <h1 class="green">{{ msg }}</h1>
+      <div class="heading-wrapper">
+      <h1 class="green">{{ msg }}
+      </h1>
+        <v-img
+            :width="250"
+            aspect-ratio="16/9"
+            cover
+            src="src/assets/rebottle_logo.png"
+            id="logo"
+        ></v-img>
+      </div>
+      <div class="heading-wrapper">
       <h3>
-        Reuse Recycle
-        <a href="https://vitejs.dev/" rel="noopener" target="_blank">Rebottle</a>
+        Reuse. Recycle.
+
       </h3>
-      <v-file-input id="file-input" label="Input your file here" small-chips></v-file-input>
+      <h3 class="green">Rebottle.</h3>
+      </div>
+
+      <v-file-input  v-model="file" accept="image/png, image/jpeg" id="file-input" label="Input your file here" small-chips ></v-file-input>
     </div>
   </div>
 </template>
@@ -21,8 +59,6 @@ defineProps<{
 h1 {
   font-weight: 500;
   font-size: 10rem;
-  top: -10px;
-  left: -6px;
 }
 
 h3 {
@@ -32,6 +68,10 @@ h3 {
 
 }
 
+#logo{
+  top: 5px;
+  left: -17px;
+}
 .headings {
   position: absolute;
   display: flex;
@@ -41,6 +81,12 @@ h3 {
   top: 0;
 }
 
+.heading-wrapper{
+  top: -10px;
+  left: -6px;
+  width: 100%;
+  display: inline-flex;
+}
 .greetings {
   top: 0;
   left: 30px;

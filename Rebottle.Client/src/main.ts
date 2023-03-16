@@ -19,6 +19,11 @@ const vuetify = createVuetify({
 })
 
 
+
+
+
+
+// Register it globally
 app.use(createPinia())
 app.use(vuetify)
 
